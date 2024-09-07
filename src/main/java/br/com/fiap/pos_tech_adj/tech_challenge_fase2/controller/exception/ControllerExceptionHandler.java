@@ -1,6 +1,7 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -38,6 +39,21 @@ public class ControllerExceptionHandler {
         standardError.setStatus(status.value());
         standardError.setError("Database Exception");
         standardError.setMessage(controllerDatabaseException.getMessage());
+        standardError.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(this.standardError);
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<StandardError> optimisticException (
+            OptimisticLockingFailureException optimisticLockingFailureException,
+            HttpServletRequest request){
+
+        HttpStatus status = HttpStatus.CONFLICT;
+        standardError.setTimeStamp(Instant.now());
+        standardError.setStatus(status.value());
+        standardError.setError("MongoDB Exception: Documento foi atualizado por outro usuário. Tente Novamente");
+        standardError.setMessage(optimisticLockingFailureException.getMessage());
         standardError.setPath(request.getRequestURI());
 
         return ResponseEntity.status(status).body(this.standardError);

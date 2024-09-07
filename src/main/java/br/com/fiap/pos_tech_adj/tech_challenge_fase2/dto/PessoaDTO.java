@@ -5,5 +5,6 @@ public record PessoaDTO(
         String email,
         String nome,
         String sobrenome,
-        String telefone) {
+        String telefone,
+        Long version) {
 }
