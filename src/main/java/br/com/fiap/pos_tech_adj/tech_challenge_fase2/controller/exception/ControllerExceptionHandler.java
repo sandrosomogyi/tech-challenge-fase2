@@ -1,13 +1,17 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -58,6 +62,43 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(status).body(this.standardError);
     }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<StandardError> duplicateKeyException (
+            DuplicateKeyException duplicateKeyException,
+            HttpServletRequest request){
+
+        HttpStatus status = HttpStatus.CONFLICT;
+        standardError.setTimeStamp(Instant.now());
+        standardError.setStatus(status.value());
+        standardError.setError("MongoDB Exception: Documento já existe na coleção.");
+        standardError.setMessage(duplicateKeyException.getMessage());
+        standardError.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(this.standardError);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> methodArgumentNotValidException(
+            MethodArgumentNotValidException methodArgumentNotValidException,
+            HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError standardError = new StandardError();
+        standardError.setTimeStamp(Instant.now());
+        standardError.setStatus(status.value());
+        standardError.setError("Erro de Validação.");
+
+        String errorMessages = methodArgumentNotValidException.getBindingResult().getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage) // Pega apenas a mensagem padrão de cada erro
+                .collect(Collectors.joining("; ")); // Junta as mensagens em uma string separada por ponto e vírgula
+
+        standardError.setMessage(errorMessages);
+        standardError.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(standardError);
+    }
+
 
     @ExceptionHandler(ControllerMessagingException.class)
     public ResponseEntity<StandardError> messagingException (

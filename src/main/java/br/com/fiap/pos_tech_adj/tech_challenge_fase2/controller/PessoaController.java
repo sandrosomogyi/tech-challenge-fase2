@@ -2,6 +2,9 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.service.PessoaService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,13 +39,13 @@ public class PessoaController {
     }
 
     @PostMapping
-    public ResponseEntity<PessoaDTO> save(@RequestBody PessoaDTO pessoaDTO){
+    public ResponseEntity<PessoaDTO> save(@Valid @RequestBody PessoaDTO pessoaDTO){
         PessoaDTO savedPessoa = pessoaService.save(pessoaDTO);
         return new ResponseEntity<>(savedPessoa, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public  ResponseEntity<PessoaDTO> update(@PathVariable String id, @RequestBody PessoaDTO pessoaDTO){
+    public  ResponseEntity<PessoaDTO> update(@PathVariable String id, @Valid @RequestBody PessoaDTO pessoaDTO){
         PessoaDTO updatedPessoa = pessoaService.update(id, pessoaDTO);
         return ResponseEntity.ok(updatedPessoa);
     }

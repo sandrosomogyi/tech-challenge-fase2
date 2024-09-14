@@ -4,6 +4,7 @@ import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.Contro
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Pessoa;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.PessoaRepository;
+import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoCursorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
