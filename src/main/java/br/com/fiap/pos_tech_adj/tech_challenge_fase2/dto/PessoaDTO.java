@@ -15,5 +15,9 @@ public record PessoaDTO(
         String sobrenome,
 
         String telefone,
+
+        @NotBlank(message = "Senha não pode estar em branco.")
+        String senha,
+
         Long version) {
 }

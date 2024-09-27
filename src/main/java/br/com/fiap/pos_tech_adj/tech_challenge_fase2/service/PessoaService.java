@@ -51,6 +51,7 @@ public class PessoaService {
             pessoa.setSobrenome(pessoaDTO.sobrenome());
             pessoa.setTelefone(pessoaDTO.telefone());
             pessoa.setEmail(pessoaDTO.email());
+            pessoa.setSenha(pessoaDTO.senha());
 
             pessoa = pessoaRepository.save(pessoa);
             return toDTO(pessoa);
@@ -72,6 +73,7 @@ public class PessoaService {
                 pessoa.getNome(),
                 pessoa.getSobrenome(),
                 pessoa.getTelefone(),
+                pessoa.getSenha(),
                 pessoa.getVersion()
         );
     }
@@ -83,6 +85,7 @@ public class PessoaService {
                 pessoaDTO.nome(),
                 pessoaDTO.sobrenome(),
                 pessoaDTO.telefone(),
+                pessoaDTO.senha(),
                 pessoaDTO.version()
         );
     }

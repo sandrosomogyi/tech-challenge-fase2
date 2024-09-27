@@ -16,6 +16,7 @@ public class Pessoa {
     private String nome;
     private String sobrenome;
     private String telefone;
+    private String senha;
 
     @Version
     private Long version;
@@ -24,12 +25,13 @@ public class Pessoa {
     public Pessoa() {
     }
 
-    public Pessoa(String id, String email, String nome, String sobrenome, String telefone, Long version) {
+    public Pessoa(String id, String email, String nome, String sobrenome, String telefone, String senha, Long version) {
         this.id = id;
         this.email = email;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.telefone = telefone;
+        this.senha = senha;
         this.version = version;
     }
 }
