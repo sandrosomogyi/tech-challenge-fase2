@@ -11,10 +11,10 @@ public class Carro {
     @Id
     private String id;
 
-    private String Placa;
-    private String Marca;
-    private String Modelo;
-    private String Cor;
+    private String placa;
+    private String marca;
+    private String modelo;
+    private String cor;
 
     @Version
     private Long version;
@@ -24,10 +24,10 @@ public class Carro {
 
     public Carro(String id, String placa, String marca, String modelo, String cor, Long version) {
         this.id = id;
-        Placa = placa;
-        Marca = marca;
-        Modelo = modelo;
-        Cor = cor;
+        placa = placa;
+        marca = marca;
+        modelo = modelo;
+        cor = cor;
         this.version = version;
     }
 }
