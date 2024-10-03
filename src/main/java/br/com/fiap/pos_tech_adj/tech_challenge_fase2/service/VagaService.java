@@ -1,9 +1,9 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.service;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.ControllerNotFoundException;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Pessoa;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.PessoaRepository;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.VagaDTO;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Vaga;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.VagaRepository;
 import com.mongodb.MongoCursorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,77 +14,71 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VagaService {
 
-    private final PessoaRepository pessoaRepository;
+    private final VagaRepository vagaRepository;
 
     @Autowired
-    public VagaService(PessoaRepository pessoaRepository){
-        this.pessoaRepository = pessoaRepository;
+    public VagaService(VagaRepository vagaRepository){
+        this.vagaRepository = vagaRepository;
     }
 
-    public Page<PessoaDTO> findAll (Pageable pageable){
-        Page<Pessoa> pessoas = pessoaRepository.findAll(pageable);
-        return pessoas.map(this::toDTO);
+    public Page<VagaDTO> findAll (Pageable pageable){
+        Page<Vaga> vagas = vagaRepository.findAll(pageable);
+        return vagas.map(this::toDTO);
     }
 
     @Transactional(readOnly = true )
-    public PessoaDTO findById(String id){
-        Pessoa Pessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new ControllerNotFoundException("Pessoa não encontrada"));
-        return toDTO(Pessoa);
+    public VagaDTO findById(String id){
+        Vaga vaga = vagaRepository.findById(id)
+                .orElseThrow(() -> new ControllerNotFoundException("Vaga não encontrada"));
+        return toDTO(vaga);
     }
 
     @Transactional
-    public PessoaDTO save(PessoaDTO pessoaDTO){
-        Pessoa pessoa = pessoaRepository.save(toEntity(pessoaDTO));
-        return toDTO(pessoa);
+    public VagaDTO save(VagaDTO vagaDTO){
+        Vaga vaga = vagaRepository.save(toEntity(vagaDTO));
+        return toDTO(vaga);
     }
 
     @Transactional
-    public PessoaDTO update(String id, PessoaDTO pessoaDTO){
+    public VagaDTO update(String id, VagaDTO vagaDTO){
         try{
-            Pessoa pessoa = pessoaRepository.findById(id)
-                    .orElseThrow(() -> new ControllerNotFoundException("Pessoa não encontrada"));
+            Vaga vaga = vagaRepository.findById(id)
+                    .orElseThrow(() -> new ControllerNotFoundException("Vaga não encontrada"));
 
-            pessoa.setNome(pessoaDTO.nome());
-            pessoa.setSobrenome(pessoaDTO.sobrenome());
-            pessoa.setTelefone(pessoaDTO.telefone());
-            pessoa.setEmail(pessoaDTO.email());
-            pessoa.setSenha(pessoaDTO.senha());
+            vaga.setTipoVaga(vagaDTO.tipoVaga());
+            vaga.setOcupada(vagaDTO.ocupada());
+            vaga.setPaquimetro(vagaDTO.paquimetro());
 
-            pessoa = pessoaRepository.save(pessoa);
-            return toDTO(pessoa);
+            vaga = vagaRepository.save(vaga);
+            return toDTO(vaga);
         }
         catch (MongoCursorNotFoundException e){
-            throw new ControllerNotFoundException("Pessoa não encontrada");
+            throw new ControllerNotFoundException("Vaga não encontrada");
         }
     }
 
     @Transactional
     public void delete(String id){
-        pessoaRepository.deleteById(id);
+        vagaRepository.deleteById(id);
     }
 
-    private PessoaDTO toDTO(Pessoa pessoa) {
-        return new PessoaDTO(
-                pessoa.getId(),
-                pessoa.getEmail(),
-                pessoa.getNome(),
-                pessoa.getSobrenome(),
-                pessoa.getTelefone(),
-                pessoa.getSenha(),
-                pessoa.getVersion()
+    private VagaDTO toDTO(Vaga vaga) {
+        return new VagaDTO(
+                vaga.getId(),
+                vaga.getTipoVaga(),
+                vaga.getOcupada(),
+                vaga.getPaquimetro(),
+                vaga.getVersion()
         );
     }
 
-    private Pessoa toEntity(PessoaDTO pessoaDTO) {
-        return new Pessoa(
-                pessoaDTO.id(),
-                pessoaDTO.email(),
-                pessoaDTO.nome(),
-                pessoaDTO.sobrenome(),
-                pessoaDTO.telefone(),
-                pessoaDTO.senha(),
-                pessoaDTO.version()
+    private Vaga toEntity(VagaDTO vagaDTO) {
+        return new Vaga(
+                vagaDTO.id(),
+                vagaDTO.tipoVaga(),
+                vagaDTO.ocupada(),
+                vagaDTO.paquimetro(),
+                vagaDTO.version()
         );
     }
 }

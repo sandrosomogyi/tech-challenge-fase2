@@ -1,9 +1,9 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.service;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.ControllerNotFoundException;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Pessoa;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.PessoaRepository;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.TransacaoDTO;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Transacao;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.TransacaoRepository;
 import com.mongodb.MongoCursorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,77 +14,77 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TransacaoService {
 
-    private final PessoaRepository pessoaRepository;
+    private final TransacaoRepository transacaoRepository;
 
     @Autowired
-    public TransacaoService(PessoaRepository pessoaRepository){
-        this.pessoaRepository = pessoaRepository;
+    public TransacaoService(TransacaoRepository transacaoRepository){
+        this.transacaoRepository = transacaoRepository;
     }
 
-    public Page<PessoaDTO> findAll (Pageable pageable){
-        Page<Pessoa> pessoas = pessoaRepository.findAll(pageable);
-        return pessoas.map(this::toDTO);
+    public Page<TransacaoDTO> findAll (Pageable pageable){
+        Page<Transacao> transacaos = transacaoRepository.findAll(pageable);
+        return transacaos.map(this::toDTO);
     }
 
     @Transactional(readOnly = true )
-    public PessoaDTO findById(String id){
-        Pessoa Pessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new ControllerNotFoundException("Pessoa não encontrada"));
-        return toDTO(Pessoa);
+    public TransacaoDTO findById(String id){
+        Transacao transacao = transacaoRepository.findById(id)
+                .orElseThrow(() -> new ControllerNotFoundException("Transação não encontrada"));
+        return toDTO(transacao);
     }
 
     @Transactional
-    public PessoaDTO save(PessoaDTO pessoaDTO){
-        Pessoa pessoa = pessoaRepository.save(toEntity(pessoaDTO));
-        return toDTO(pessoa);
+    public TransacaoDTO save(TransacaoDTO transacaoDTO){
+        Transacao transacao = transacaoRepository.save(toEntity(transacaoDTO));
+        return toDTO(transacao);
     }
 
     @Transactional
-    public PessoaDTO update(String id, PessoaDTO pessoaDTO){
+    public TransacaoDTO update(String id, TransacaoDTO transacaoDTO){
         try{
-            Pessoa pessoa = pessoaRepository.findById(id)
-                    .orElseThrow(() -> new ControllerNotFoundException("Pessoa não encontrada"));
+            Transacao transacao = transacaoRepository.findById(id)
+                    .orElseThrow(() -> new ControllerNotFoundException("Transação não encontrada"));
 
-            pessoa.setNome(pessoaDTO.nome());
-            pessoa.setSobrenome(pessoaDTO.sobrenome());
-            pessoa.setTelefone(pessoaDTO.telefone());
-            pessoa.setEmail(pessoaDTO.email());
-            pessoa.setSenha(pessoaDTO.senha());
+            transacao.setMotorista(transacaoDTO.motorista());
+            transacao.setCarro(transacaoDTO.carro());
+            transacao.setVaga(transacaoDTO.vaga());
+            transacao.setData(transacaoDTO.data());
+            transacao.setHoras(transacaoDTO.horas());
 
-            pessoa = pessoaRepository.save(pessoa);
-            return toDTO(pessoa);
+            transacao = transacaoRepository.save(transacao);
+            return toDTO(transacao);
         }
         catch (MongoCursorNotFoundException e){
-            throw new ControllerNotFoundException("Pessoa não encontrada");
+            throw new ControllerNotFoundException("Transação não encontrada");
         }
     }
 
     @Transactional
     public void delete(String id){
-        pessoaRepository.deleteById(id);
+        transacaoRepository.deleteById(id);
     }
 
-    private PessoaDTO toDTO(Pessoa pessoa) {
-        return new PessoaDTO(
-                pessoa.getId(),
-                pessoa.getEmail(),
-                pessoa.getNome(),
-                pessoa.getSobrenome(),
-                pessoa.getTelefone(),
-                pessoa.getSenha(),
-                pessoa.getVersion()
+    private TransacaoDTO toDTO(Transacao transacao) {
+        return new TransacaoDTO(
+                transacao.getId(),
+                transacao.getMotorista(),
+                transacao.getCarro(),
+                transacao.getVaga(),
+                transacao.getData(),
+                transacao.getHoras(),
+                transacao.getVersion()
         );
     }
 
-    private Pessoa toEntity(PessoaDTO pessoaDTO) {
-        return new Pessoa(
-                pessoaDTO.id(),
-                pessoaDTO.email(),
-                pessoaDTO.nome(),
-                pessoaDTO.sobrenome(),
-                pessoaDTO.telefone(),
-                pessoaDTO.senha(),
-                pessoaDTO.version()
+    private Transacao toEntity(TransacaoDTO transacaoDTO) {
+        return new Transacao(
+                transacaoDTO.id(),
+                transacaoDTO.motorista(),
+                transacaoDTO.carro(),
+                transacaoDTO.vaga(),
+                transacaoDTO.data(),
+                transacaoDTO.horas(),
+                transacaoDTO.version()
         );
     }
 }
