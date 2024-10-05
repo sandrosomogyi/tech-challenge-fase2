@@ -13,7 +13,7 @@ public class Vaga {
     private String id;
 
     private String tipoVaga;
-
+    private Integer numVaga;
     private Boolean ocupada;
 
     @DBRef
@@ -25,9 +25,10 @@ public class Vaga {
     public Vaga() {
     }
 
-    public Vaga(String id, String tipoVaga, Boolean ocupada, Paquimetro paquimetro, Long version) {
+    public Vaga(String id, String tipoVaga, Integer numVaga, Boolean ocupada, Paquimetro paquimetro, Long version) {
         this.id = id;
         this.tipoVaga = tipoVaga;
+        this.numVaga = numVaga;
         this.ocupada = ocupada;
         this.paquimetro = paquimetro;
         this.version = version;

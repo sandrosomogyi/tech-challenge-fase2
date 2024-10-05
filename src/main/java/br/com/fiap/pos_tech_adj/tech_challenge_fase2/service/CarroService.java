@@ -49,6 +49,7 @@ public class CarroService {
             carro.setMarca(carroDTO.marca());
             carro.setModelo(carroDTO.modelo());
             carro.setCor(carroDTO.cor());
+            carro.setMotorista(carroDTO.motorista());
 
             carro = carroRepository.save(carro);
             return toDTO(carro);
@@ -70,6 +71,7 @@ public class CarroService {
                 carro.getMarca(),
                 carro.getModelo(),
                 carro.getCor(),
+                carro.getMotorista(),
                 carro.getVersion()
         );
     }
@@ -81,6 +83,7 @@ public class CarroService {
                 carroDTO.marca(),
                 carroDTO.modelo(),
                 carroDTO.cor(),
+                carroDTO.motorista(),
                 carroDTO.version()
         );
     }

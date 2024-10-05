@@ -66,6 +66,7 @@ public class VagaService {
         return new VagaDTO(
                 vaga.getId(),
                 vaga.getTipoVaga(),
+                vaga.getNumVaga(),
                 vaga.getOcupada(),
                 vaga.getPaquimetro(),
                 vaga.getVersion()
@@ -76,6 +77,7 @@ public class VagaService {
         return new Vaga(
                 vagaDTO.id(),
                 vagaDTO.tipoVaga(),
+                vagaDTO.numVaga(),
                 vagaDTO.ocupada(),
                 vagaDTO.paquimetro(),
                 vagaDTO.version()

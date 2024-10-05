@@ -3,6 +3,7 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Carro;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Pessoa;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Transacao;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ public record MotoristaDTO (
         Float saldo,
         List<Carro> carros,
         List<Transacao> transacoes,
+
+        @NotBlank(message = "Informações da Pessoa não pode estar em branco.")
         Pessoa pessoa,
         Long version
 ){
