@@ -1,5 +1,6 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.model;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
@@ -20,6 +21,8 @@ public class Paquimetro {
     private Float valor;
 
     @DBRef
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")  // Usar o campo `id` como referência
+    @JsonIdentityReference(alwaysAsId = true)  // Mostrar apenas o ID na serialização
     private List<Vaga> vagas;
 
     @Version

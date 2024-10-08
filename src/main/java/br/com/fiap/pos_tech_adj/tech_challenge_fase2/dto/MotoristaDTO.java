@@ -12,8 +12,6 @@ public record MotoristaDTO (
         Float saldo,
         List<Carro> carros,
         List<Transacao> transacoes,
-
-        @NotBlank(message = "Informações da Pessoa não pode estar em branco.")
         Pessoa pessoa,
         Long version
 ){

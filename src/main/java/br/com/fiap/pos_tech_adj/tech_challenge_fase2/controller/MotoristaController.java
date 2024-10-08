@@ -1,6 +1,7 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.MotoristaDTO;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.service.MotoristaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class MotoristaController {
     private MotoristaService motoristaService;
 
     @Autowired
-    public MotoristaController(MotoristaService MotoristaService){
+    public MotoristaController(MotoristaService motoristaService){
         this.motoristaService = motoristaService;
     }
 
@@ -46,6 +47,18 @@ public class MotoristaController {
     public  ResponseEntity<MotoristaDTO> update(@PathVariable String id, @Valid @RequestBody MotoristaDTO motoristaDTO){
         MotoristaDTO updatedMotorista = motoristaService.update(id, motoristaDTO);
         return ResponseEntity.ok(updatedMotorista);
+    }
+
+    @PutMapping("recarregarSaldo")
+    public  ResponseEntity<MotoristaDTO> recarregarSaldo(@RequestParam String id,  @RequestParam Float saldo){
+        MotoristaDTO updatedMotorista = motoristaService.recarregarSaldo(id, saldo);
+        return ResponseEntity.ok(updatedMotorista);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<MotoristaDTO> login (@RequestParam String email, @RequestParam String senha){
+        MotoristaDTO motoristaDTO = motoristaService.loginMotorista(email, senha);
+        return ResponseEntity.ok(motoristaDTO);
     }
 
     @DeleteMapping("/{id}")

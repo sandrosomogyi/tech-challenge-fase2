@@ -1,5 +1,9 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.validation.Valid;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -16,12 +20,18 @@ public class Transacao {
     private String id;
 
     @DBRef
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")  // Usar o campo `id` como referência
+    @JsonIdentityReference(alwaysAsId = true)  // Mostrar apenas o ID na serialização
     private Motorista motorista;
 
     @DBRef
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Carro carro;
 
     @DBRef
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Vaga vaga;
 
     private LocalDate data;

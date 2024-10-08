@@ -1,6 +1,7 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.AgenteFiscalDTO;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.MotoristaDTO;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.service.AgenteFiscalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,11 @@ public class AgenteFiscalController {
     public  ResponseEntity<Void> delete(@PathVariable String id){
         agenteFiscalService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<AgenteFiscalDTO> login (@RequestParam String email, @RequestParam String senha){
+        AgenteFiscalDTO agenteFiscalDTO = agenteFiscalService.loginAgente(email, senha);
+        return ResponseEntity.ok(agenteFiscalDTO);
     }
 }

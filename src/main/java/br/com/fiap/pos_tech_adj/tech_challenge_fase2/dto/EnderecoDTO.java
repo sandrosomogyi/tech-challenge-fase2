@@ -21,6 +21,7 @@ public record EnderecoDTO(
         Integer numero,
 
         String complemento,
+        String cep,
 
         Long version
 ) {

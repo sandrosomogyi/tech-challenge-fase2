@@ -2,7 +2,11 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.service;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.ControllerNotFoundException;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.VagaDTO;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Carro;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Motorista;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Paquimetro;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Vaga;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.PaquimetroRepository;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.VagaRepository;
 import com.mongodb.MongoCursorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +15,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Objects;
+
 @Service
 public class VagaService {
 
     private final VagaRepository vagaRepository;
+    private  final PaquimetroRepository paquimetroRepository;
 
     @Autowired
-    public VagaService(VagaRepository vagaRepository){
+    public VagaService(VagaRepository vagaRepository, PaquimetroRepository paquimetroRepository){
         this.vagaRepository = vagaRepository;
+        this.paquimetroRepository = paquimetroRepository;
     }
 
     public Page<VagaDTO> findAll (Pageable pageable){
@@ -36,6 +45,11 @@ public class VagaService {
     @Transactional
     public VagaDTO save(VagaDTO vagaDTO){
         Vaga vaga = vagaRepository.save(toEntity(vagaDTO));
+
+        vaga.getPaquimetro().getVagas().add(vaga);
+
+        paquimetroRepository.save(vaga.getPaquimetro());
+
         return toDTO(vaga);
     }
 
@@ -47,7 +61,18 @@ public class VagaService {
 
             vaga.setTipoVaga(vagaDTO.tipoVaga());
             vaga.setOcupada(vagaDTO.ocupada());
-            vaga.setPaquimetro(vagaDTO.paquimetro());
+
+            Paquimetro paquimetro = paquimetroRepository.findById(vagaDTO.idPaquimetro())
+                    .orElseThrow(() -> new ControllerNotFoundException("Paquimetro não encontrada"));
+
+            paquimetro.getVagas().removeIf(x -> Objects.equals(x.getId(), id));;
+            paquimetro.getVagas().add(vaga);
+
+            paquimetro.setVagas(vagas);
+
+            paquimetro = paquimetroRepository.save(paquimetro);
+
+            vaga.setPaquimetro(paquimetro);
 
             vaga = vagaRepository.save(vaga);
             return toDTO(vaga);
@@ -59,6 +84,16 @@ public class VagaService {
 
     @Transactional
     public void delete(String id){
+        Vaga vaga = vagaRepository.findById(id)
+                .orElseThrow(() -> new ControllerNotFoundException("Vaga não encontrada"));
+
+        Paquimetro paquimetro = paquimetroRepository.findById(vaga.getPaquimetro().getId())
+                .orElseThrow(() -> new ControllerNotFoundException("Paquimetro não encontrada"));
+
+        paquimetro.getVagas().removeIf(x -> Objects.equals(x.getId(), id));
+
+        paquimetroRepository.save(paquimetro);
+
         vagaRepository.deleteById(id);
     }
 
@@ -68,18 +103,21 @@ public class VagaService {
                 vaga.getTipoVaga(),
                 vaga.getNumVaga(),
                 vaga.getOcupada(),
-                vaga.getPaquimetro(),
+                vaga.getPaquimetro().getId(),
                 vaga.getVersion()
         );
     }
 
     private Vaga toEntity(VagaDTO vagaDTO) {
+        Paquimetro paquimetro = paquimetroRepository.findById(vagaDTO.idPaquimetro())
+                .orElseThrow(() -> new ControllerNotFoundException("Paquimetro não encontrada"));
+
         return new Vaga(
                 vagaDTO.id(),
                 vagaDTO.tipoVaga(),
                 vagaDTO.numVaga(),
                 vagaDTO.ocupada(),
-                vagaDTO.paquimetro(),
+                paquimetro,
                 vagaDTO.version()
         );
     }

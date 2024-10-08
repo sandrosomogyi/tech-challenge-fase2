@@ -14,7 +14,7 @@ public record VagaDTO (
         Boolean ocupada,
 
         @NotBlank(message = "Paquimetro não pode estar em branco.")
-        Paquimetro paquimetro,
+        String idPaquimetro,
         Long version
 ) {
 }

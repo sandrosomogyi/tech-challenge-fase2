@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 public record AgenteFiscalDTO (
         String id,
 
-        @NotBlank(message = "Informações da Pessoa não pode estar em branco.")
         Pessoa pessoa,
 
         Long version

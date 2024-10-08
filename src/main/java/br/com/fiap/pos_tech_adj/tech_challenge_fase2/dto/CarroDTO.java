@@ -13,8 +13,8 @@ public record CarroDTO (
         String modelo,
         String cor,
 
-        @NotBlank(message = "Motorista não pode estar em branco.")
-        Motorista motorista,
+        @NotBlank(message = "idMotorista não pode estar em branco.")
+        String idMotorista,
 
         Long version
 ){

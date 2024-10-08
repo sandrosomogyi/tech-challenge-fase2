@@ -2,8 +2,15 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.service;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.ControllerNotFoundException;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.MotoristaDTO;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Carro;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Motorista;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Pessoa;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Transacao;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.CarroRepository;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.MotoristaRepository;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.PessoaRepository;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.TransacaoRepository;
 import com.mongodb.MongoCursorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,14 +18,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class MotoristaService {
 
+
     private final MotoristaRepository motoristaRepository;
+    private final PessoaRepository pessoaRepository;
 
     @Autowired
-    public MotoristaService(MotoristaRepository motoristaRepository){
+    public MotoristaService(MotoristaRepository motoristaRepository, PessoaRepository pessoaRepository){
         this.motoristaRepository = motoristaRepository;
+        this.pessoaRepository = pessoaRepository;
     }
 
     public Page<MotoristaDTO> findAll (Pageable pageable){
@@ -46,6 +59,7 @@ public class MotoristaService {
                     .orElseThrow(() -> new ControllerNotFoundException("Motorista não encontrada"));
 
             motorista.setSaldo(motoristaDTO.saldo());
+
             motorista.setCarros(motoristaDTO.carros());
             motorista.setTransacoes(motoristaDTO.transacoes());
             motorista.setPessoa(motoristaDTO.pessoa());
@@ -63,6 +77,37 @@ public class MotoristaService {
         motoristaRepository.deleteById(id);
     }
 
+    @Transactional
+    public MotoristaDTO recarregarSaldo(String id, Float saldo){
+        try{
+            Motorista motorista = motoristaRepository.findById(id)
+                    .orElseThrow(() -> new ControllerNotFoundException("Motorista não encontrada"));
+
+            motorista.setSaldo(motorista.getSaldo() + saldo);
+
+            motorista = motoristaRepository.save(motorista);
+            return toDTO(motorista);
+        }
+        catch (MongoCursorNotFoundException e){
+            throw new ControllerNotFoundException("Motorista não encontrada");
+        }
+    }
+
+    @Transactional(readOnly = true )
+    public MotoristaDTO loginMotorista(String email, String senha){
+        try {
+            Pessoa pessoa = pessoaRepository.findByEmailAndSenha(email, senha)
+                    .orElseThrow(() -> new ControllerNotFoundException("Não foi possivel realizar o Login verifique os dados."));;
+
+            Motorista motorista = motoristaRepository.findByPessoa_Id(pessoa.getId())
+                    .orElseThrow(() -> new ControllerNotFoundException("Motorista não encontrada"));;
+
+            return toDTO(motorista);
+        }catch (MongoCursorNotFoundException e) {
+            throw new ControllerNotFoundException("Não foi possivel realizar o Login verifique os dados.");
+        }
+    }
+
     private MotoristaDTO toDTO(Motorista motorista) {
         return new MotoristaDTO(
                 motorista.getId(),
@@ -75,12 +120,16 @@ public class MotoristaService {
     }
 
     private Motorista toEntity(MotoristaDTO motoristaDTO) {
+
+        Pessoa pessoa = pessoaRepository.findById(motoristaDTO.pessoa().getId())
+                .orElseThrow(() -> new ControllerNotFoundException("Pessoa não encontrada"));
+
         return new Motorista(
                 motoristaDTO.id(),
                 motoristaDTO.saldo(),
                 motoristaDTO.carros(),
                 motoristaDTO.transacoes(),
-                motoristaDTO.pessoa(),
+                pessoa,
                 motoristaDTO.version()
         );
     }

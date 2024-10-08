@@ -3,6 +3,7 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -18,13 +19,16 @@ public class Endereco {
     private Integer numero;
     private String complemento;
 
+    @Indexed(unique = true)  // Definindo o campo `cep` como único na base de dados
+    private String cep;
+
     @Version
     private Long version;
 
     public Endereco() {
     }
 
-    public Endereco(String id, String uf, String cidade, String bairro, String rua, Integer numero, String complemento, Long version) {
+    public Endereco(String id, String uf, String cidade, String bairro, String rua, Integer numero, String complemento, String cep, Long version) {
         this.id = id;
         this.uf = uf;
         this.cidade = cidade;
@@ -32,6 +36,7 @@ public class Endereco {
         this.rua = rua;
         this.numero = numero;
         this.complemento = complemento;
+        this.cep = cep;
         this.version = version;
     }
 }

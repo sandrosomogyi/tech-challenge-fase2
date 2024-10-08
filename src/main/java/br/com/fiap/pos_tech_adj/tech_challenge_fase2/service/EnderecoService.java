@@ -51,6 +51,7 @@ public class EnderecoService {
             endereco.setRua(enderecoDTO.rua());
             endereco.setNumero(enderecoDTO.numero());
             endereco.setComplemento(enderecoDTO.complemento());
+            endereco.setCep(enderecoDTO.cep());
 
             endereco = enderecoRepository.save(endereco);
             return toDTO(endereco);
@@ -74,6 +75,7 @@ public class EnderecoService {
                 endereco.getRua(),
                 endereco.getNumero(),
                 endereco.getComplemento(),
+                endereco.getCep(),
                 endereco.getVersion()
         );
     }
@@ -87,6 +89,7 @@ public class EnderecoService {
                 enderecoDTO.rua(),
                 enderecoDTO.numero(),
                 enderecoDTO.complemento(),
+                enderecoDTO.cep(),
                 enderecoDTO.version()
         );
     }

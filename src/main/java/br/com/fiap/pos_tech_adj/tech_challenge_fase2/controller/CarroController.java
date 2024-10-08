@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/Carro")
+@RequestMapping("/carro")
 public class CarroController {
 
     private CarroService carroService;
