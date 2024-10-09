@@ -1,17 +1,14 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.validation.Valid;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -38,19 +35,22 @@ public class Transacao {
     private LocalDateTime dataHora;
     private Integer horas;
 
+    private LocalDateTime dataExpiracao;
+
     @Version
     private Long version;
 
     public Transacao() {
     }
 
-    public Transacao(String id, Motorista motorista, Carro carro, Vaga vaga, LocalDateTime dataHora, Integer horas, Long version) {
+    public Transacao(String id, Motorista motorista, Carro carro, Vaga vaga, LocalDateTime dataHora, Integer horas, LocalDateTime dataExpiracao, Long version) {
         this.id = id;
         this.motorista = motorista;
         this.carro = carro;
         this.vaga = vaga;
         this.dataHora = dataHora;
         this.horas = horas;
+        this.dataExpiracao = dataExpiracao;
         this.version = version;
     }
 }

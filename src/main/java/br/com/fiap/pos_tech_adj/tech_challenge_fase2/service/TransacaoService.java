@@ -143,6 +143,7 @@ public class TransacaoService {
                 vaga,
                 transacaoDTO.dataHora(),
                 transacaoDTO.horas(),
+                transacaoDTO.dataExpiracao(),
                 transacaoDTO.version()
         );
     }

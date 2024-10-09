@@ -1,12 +1,8 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto;
 
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Carro;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Motorista;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Vaga;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record TransacaoDTO (
@@ -27,6 +23,19 @@ public record TransacaoDTO (
         @NotNull(message = "Horas não pode estar em branco.")
         Integer horas,
 
+        LocalDateTime dataExpiracao,
+
         Long version
 ){
+        public TransacaoDTO(
+                String id,
+                String idMotorista,
+                String idCarro,
+                String idVaga,
+                LocalDateTime dataHora,
+                Integer horas,
+                Long version
+        ) {
+                this(id, idMotorista, idCarro, idVaga, dataHora, horas, dataHora.plusHours(horas), version);
+        }
 }
