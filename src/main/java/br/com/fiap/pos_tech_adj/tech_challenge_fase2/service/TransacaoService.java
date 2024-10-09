@@ -2,8 +2,11 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.service;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.ControllerNotFoundException;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.TransacaoDTO;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Transacao;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.*;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.CarroRepository;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.MotoristaRepository;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.TransacaoRepository;
+import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.VagaRepository;
 import com.mongodb.MongoCursorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,10 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class TransacaoService {
 
     private final TransacaoRepository transacaoRepository;
+    private final MotoristaRepository motoristaRepository;
+    private final CarroRepository carroRepository;
+    private final VagaRepository vagaRepository;
 
     @Autowired
-    public TransacaoService(TransacaoRepository transacaoRepository){
+    public TransacaoService(TransacaoRepository transacaoRepository, MotoristaRepository motoristaRepository, CarroRepository carroRepository,
+                            VagaRepository vagaRepository){
         this.transacaoRepository = transacaoRepository;
+        this.motoristaRepository = motoristaRepository;
+        this.carroRepository = carroRepository;
+        this.vagaRepository = vagaRepository;
     }
 
     public Page<TransacaoDTO> findAll (Pageable pageable){
@@ -45,10 +55,19 @@ public class TransacaoService {
             Transacao transacao = transacaoRepository.findById(id)
                     .orElseThrow(() -> new ControllerNotFoundException("Transação não encontrada"));
 
-            transacao.setMotorista(transacaoDTO.motorista());
-            transacao.setCarro(transacaoDTO.carro());
-            transacao.setVaga(transacaoDTO.vaga());
-            transacao.setData(transacaoDTO.data());
+            Motorista motorista = motoristaRepository.findById(transacaoDTO.idMotorista())
+                    .orElseThrow(() -> new ControllerNotFoundException("Motorista não encontrada"));
+
+            Carro carro = carroRepository.findById(transacaoDTO.idCarro())
+                    .orElseThrow(() -> new ControllerNotFoundException("Carro não encontrada"));
+
+            Vaga vaga = vagaRepository.findById(transacaoDTO.idVaga())
+                    .orElseThrow(() -> new ControllerNotFoundException("Vaga não encontrada"));
+
+            transacao.setMotorista(motorista);
+            transacao.setCarro(carro);
+            transacao.setVaga(vaga);
+            transacao.setDataHora(transacaoDTO.dataHora());
             transacao.setHoras(transacaoDTO.horas());
 
             transacao = transacaoRepository.save(transacao);
@@ -64,25 +83,65 @@ public class TransacaoService {
         transacaoRepository.deleteById(id);
     }
 
+    @Transactional
+    public TransacaoDTO ocuparVaga(TransacaoDTO transacaoDTO){
+        Motorista motorista = motoristaRepository.findById(transacaoDTO.idMotorista())
+                .orElseThrow(() -> new ControllerNotFoundException("Motorista não encontrada"));
+
+        Vaga vaga = vagaRepository.findById(transacaoDTO.idVaga())
+                .orElseThrow(() -> new ControllerNotFoundException("Vaga não encontrada"));
+
+        var valor = vaga.getPaquimetro().getValor() * transacaoDTO.horas();
+
+        if (motorista.getSaldo() <= valor){
+            throw new ControllerNotFoundException("Motorista sem Saldo suficiente!");
+        }
+        if (vaga.getOcupada()){
+            throw new ControllerNotFoundException("Vaga já está Ocupada!");
+        }
+
+        Transacao transacao = transacaoRepository.save(toEntity(transacaoDTO));
+
+        vaga.setOcupada(true);
+        vagaRepository.save(vaga);
+
+        motorista.setSaldo(motorista.getSaldo() - valor);
+        motorista.getTransacoes().add(transacao);
+        motoristaRepository.save(motorista);
+
+        return toDTO(transacao);
+    }
+
     private TransacaoDTO toDTO(Transacao transacao) {
+
+
         return new TransacaoDTO(
                 transacao.getId(),
-                transacao.getMotorista(),
-                transacao.getCarro(),
-                transacao.getVaga(),
-                transacao.getData(),
+                transacao.getMotorista().getId(),
+                transacao.getCarro().getId(),
+                transacao.getVaga().getId(),
+                transacao.getDataHora(),
                 transacao.getHoras(),
                 transacao.getVersion()
         );
     }
 
     private Transacao toEntity(TransacaoDTO transacaoDTO) {
+        Motorista motorista = motoristaRepository.findById(transacaoDTO.idMotorista())
+                .orElseThrow(() -> new ControllerNotFoundException("Motorista não encontrada"));
+
+        Carro carro = carroRepository.findById(transacaoDTO.idCarro())
+                .orElseThrow(() -> new ControllerNotFoundException("Carro não encontrada"));
+
+        Vaga vaga = vagaRepository.findById(transacaoDTO.idVaga())
+                .orElseThrow(() -> new ControllerNotFoundException("Vaga não encontrada"));
+
         return new Transacao(
                 transacaoDTO.id(),
-                transacaoDTO.motorista(),
-                transacaoDTO.carro(),
-                transacaoDTO.vaga(),
-                transacaoDTO.data(),
+                motorista,
+                carro,
+                vaga,
+                transacaoDTO.dataHora(),
                 transacaoDTO.horas(),
                 transacaoDTO.version()
         );

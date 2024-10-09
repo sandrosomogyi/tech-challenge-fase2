@@ -18,9 +18,11 @@ public record EnderecoDTO(
         String rua,
 
         @NotBlank(message = "Número não pode estar em branco.")
-        Integer numero,
+        String numero,
 
         String complemento,
+
+        @NotBlank(message = "CEP não pode estar em branco.")
         String cep,
 
         Long version

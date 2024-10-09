@@ -2,6 +2,7 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Paquimetro;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record VagaDTO (
         String id,
@@ -9,7 +10,7 @@ public record VagaDTO (
         @NotBlank(message = "Tipo Vaga não pode estar em branco.")
         String tipoVaga,
 
-        @NotBlank(message = "Numero da Vaga não pode estar em branco.")
+        @NotNull(message = "Numero da Vaga não pode estar em branco.")
         Integer numVaga,
         Boolean ocupada,
 

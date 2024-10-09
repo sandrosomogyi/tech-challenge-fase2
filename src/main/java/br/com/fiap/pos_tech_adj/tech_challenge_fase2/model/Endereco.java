@@ -16,10 +16,9 @@ public class Endereco {
     private String cidade;
     private String bairro;
     private String rua;
-    private Integer numero;
+    private String numero;
     private String complemento;
 
-    @Indexed(unique = true)  // Definindo o campo `cep` como único na base de dados
     private String cep;
 
     @Version
@@ -28,7 +27,7 @@ public class Endereco {
     public Endereco() {
     }
 
-    public Endereco(String id, String uf, String cidade, String bairro, String rua, Integer numero, String complemento, String cep, Long version) {
+    public Endereco(String id, String uf, String cidade, String bairro, String rua, String numero, String complemento, String cep, Long version) {
         this.id = id;
         this.uf = uf;
         this.cidade = cidade;

@@ -42,6 +42,12 @@ public class TransacaoController {
         return new ResponseEntity<>(savedTransacao, HttpStatus.CREATED);
     }
 
+    @PostMapping("/ocuparVaga")
+    public ResponseEntity<TransacaoDTO> ocuparVaga(@Valid @RequestBody TransacaoDTO transacaoDTO){
+        TransacaoDTO savedTransacao = transacaoService.ocuparVaga(transacaoDTO);
+        return new ResponseEntity<>(savedTransacao, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
     public  ResponseEntity<TransacaoDTO> update(@PathVariable String id, @Valid @RequestBody TransacaoDTO transacaoDTO){
         TransacaoDTO updatedTransacao = transacaoService.update(id, transacaoDTO);
