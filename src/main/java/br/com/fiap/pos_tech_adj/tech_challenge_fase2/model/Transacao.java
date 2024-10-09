@@ -11,7 +11,8 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 @Data
 @Document
@@ -34,8 +35,10 @@ public class Transacao {
     @JsonIdentityReference(alwaysAsId = true)
     private Vaga vaga;
 
-    private LocalDate data;
+    private LocalDateTime data;
     private Integer horas;
+
+    private LocalDateTime dataExpiracao;
 
     @Version
     private Long version;
@@ -43,13 +46,15 @@ public class Transacao {
     public Transacao() {
     }
 
-    public Transacao(String id, Motorista motorista, Carro carro, Vaga vaga, LocalDate data, Integer horas, Long version) {
+    public Transacao(String id, Motorista motorista, Carro carro, Vaga vaga, LocalDateTime data, Integer horas, LocalDateTime dataExpiracao,
+                     Long version) {
         this.id = id;
         this.motorista = motorista;
         this.carro = carro;
         this.vaga = vaga;
         this.data = data;
         this.horas = horas;
+        this.dataExpiracao = dataExpiracao;
         this.version = version;
     }
 }

@@ -68,8 +68,6 @@ public class VagaService {
             paquimetro.getVagas().removeIf(x -> Objects.equals(x.getId(), id));;
             paquimetro.getVagas().add(vaga);
 
-            paquimetro.setVagas(vagas);
-
             paquimetro = paquimetroRepository.save(paquimetro);
 
             vaga.setPaquimetro(paquimetro);
