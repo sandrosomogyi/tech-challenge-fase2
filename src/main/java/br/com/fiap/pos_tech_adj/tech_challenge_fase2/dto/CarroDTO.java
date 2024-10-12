@@ -1,6 +1,5 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto;
 
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Motorista;
 import jakarta.validation.constraints.NotBlank;
 
 public record CarroDTO (

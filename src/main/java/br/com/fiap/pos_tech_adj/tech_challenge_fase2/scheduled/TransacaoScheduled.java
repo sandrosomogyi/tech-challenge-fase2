@@ -1,7 +1,6 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.scheduled;
 
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -18,6 +17,7 @@ public class TransacaoScheduled {
     private final TransacaoRepository transacaoRepository;
     private final VagaRepository vagaRepository;
 
+    @Autowired
     public TransacaoScheduled(TransacaoRepository transacaoRepository, VagaRepository vagaRepository) {
         this.transacaoRepository = transacaoRepository;
         this.vagaRepository = vagaRepository;

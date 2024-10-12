@@ -93,7 +93,7 @@ public class TransacaoService {
 
         var valor = vaga.getPaquimetro().getValor() * transacaoDTO.horas();
 
-        if (motorista.getSaldo() <= valor){
+        if (motorista.getSaldo() < valor){
             throw new ControllerNotFoundException("Motorista sem Saldo suficiente!");
         }
         if (vaga.getOcupada()){

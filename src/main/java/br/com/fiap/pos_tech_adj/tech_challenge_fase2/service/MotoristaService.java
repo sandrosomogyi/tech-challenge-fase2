@@ -2,15 +2,10 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.service;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.ControllerNotFoundException;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.MotoristaDTO;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Carro;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Motorista;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Pessoa;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Transacao;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.CarroRepository;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.MotoristaRepository;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.PessoaRepository;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.TransacaoRepository;
 import com.mongodb.MongoCursorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

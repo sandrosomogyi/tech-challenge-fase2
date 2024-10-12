@@ -2,8 +2,6 @@ package br.com.fiap.pos_tech_adj.tech_challenge_fase2.service;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller.exception.ControllerNotFoundException;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.VagaDTO;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Carro;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Motorista;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Paquimetro;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.model.Vaga;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.repository.PaquimetroRepository;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service

@@ -1,7 +1,6 @@
 package br.com.fiap.pos_tech_adj.tech_challenge_fase2.controller;
 
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.MotoristaDTO;
-import br.com.fiap.pos_tech_adj.tech_challenge_fase2.dto.PessoaDTO;
 import br.com.fiap.pos_tech_adj.tech_challenge_fase2.service.MotoristaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
