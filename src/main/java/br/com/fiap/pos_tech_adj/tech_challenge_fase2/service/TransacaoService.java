@@ -99,8 +99,17 @@ public class TransacaoService {
         if (vaga.getOcupada()){
             throw new ControllerNotFoundException("Vaga já está Ocupada!");
         }
+  
+        TransacaoDTO novaTransacaoDTO = new TransacaoDTO(
+                transacaoDTO.id(),
+                transacaoDTO.idMotorista(),
+                transacaoDTO.idCarro(),
+                transacaoDTO.idVaga(),
+                transacaoDTO.horas(),
+                transacaoDTO.version()
+        );
 
-        Transacao transacao = transacaoRepository.save(toEntity(transacaoDTO));
+        Transacao transacao = transacaoRepository.save(toEntity(novaTransacaoDTO));
 
         vaga.setOcupada(true);
         vagaRepository.save(vaga);
@@ -122,6 +131,7 @@ public class TransacaoService {
                 transacao.getVaga().getId(),
                 transacao.getDataHora(),
                 transacao.getHoras(),
+                transacao.getDataExpiracao(),
                 transacao.getVersion()
         );
     }

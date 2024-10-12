@@ -17,7 +17,6 @@ public record TransacaoDTO (
         @NotBlank(message = "Vaga não pode estar em branco.")
         String idVaga,
 
-        @NotNull(message = "Data Hora não pode estar em branco.")
         LocalDateTime dataHora,
 
         @NotNull(message = "Horas não pode estar em branco.")
@@ -27,15 +26,15 @@ public record TransacaoDTO (
 
         Long version
 ){
-        public TransacaoDTO(
-                String id,
-                String idMotorista,
-                String idCarro,
-                String idVaga,
-                LocalDateTime dataHora,
-                Integer horas,
-                Long version
-        ) {
-                this(id, idMotorista, idCarro, idVaga, dataHora, horas, dataHora.plusHours(horas), version);
-        }
+        
+    public TransacaoDTO(
+            String id,
+            String idMotorista,
+            String idCarro,
+            String idVaga,
+            Integer horas,
+            Long version
+    ) {
+        this(id, idMotorista, idCarro, idVaga, LocalDateTime.now(), horas, LocalDateTime.now().plusHours(horas), version);
+    }        
 }
